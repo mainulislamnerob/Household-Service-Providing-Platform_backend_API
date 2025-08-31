@@ -1,7 +1,7 @@
 {
   "builds": [
     {
-      "src": "staybangla/wsgi.py",
+      "src": "household/wsgi.py",
       "use": "@vercel/python",
       "config": { "maxLambdaSize": "15mb", "runtime": "python3.11" }
     }
@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "staybangla/wsgi.py"
+      "dest": "household/wsgi.py"
     }
   ]
 }

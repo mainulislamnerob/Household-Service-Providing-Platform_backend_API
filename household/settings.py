@@ -1,14 +1,13 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from urllib.parse import urlparse
-from decouple import config
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
-DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 INSTALLED_APPS = [
@@ -19,7 +18,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    'drf_yasg',
+    "drf_yasg",
     "apps.users",
     "apps.services",
     "apps.cart",
@@ -57,31 +56,21 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "household.wsgi.app"
+WSGI_APPLICATION = "household.wsgi.application"   # <-- fixed
 
-# Database: default to sqlite, supports DATABASE_URL
-# DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR/'db.sqlite3'}")
-# if DATABASE_URL.startswith("sqlite:///"):
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.sqlite3",
-#             "NAME": DATABASE_URL.replace("sqlite:///", ""),
-#         }
-#     }
-# else:
-#     # very simple parser for postgres://... URLs
-#     import dj_database_url  # type: ignore
-#     DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
+# ---- PostgreSQL (Supabase Pooler) ----
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('dbname'),
-        'USER': config('user'),
-        'PASSWORD': config('password'),
-        'HOST': config('host'),
-        'PORT': config('port'),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT", "5432"),
+        "OPTIONS": {"sslmode": "require"},   # Supabase requires SSL
     }
 }
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -110,6 +99,5 @@ REST_FRAMEWORK = {
     ),
 }
 
-# Email (optional; not required for this project spec)
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "noreply@example.com"
