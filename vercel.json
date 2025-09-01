@@ -3,13 +3,10 @@
     {
       "src": "household/wsgi.py",
       "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.11" }
+      "config": { "runtime": "python3.11", "maxLambdaSize": "15mb" }
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "household/wsgi.py"
-    }
+    { "src": "/(.*)", "dest": "household/wsgi.py" }
   ]
 }
